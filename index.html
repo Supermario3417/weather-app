@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="img/3417.ico" type="image/x-icon" />
+</head>
+<body>
+    <div class="container">
+        <!--Search Section-->
+        <div class="search-section">
+            <div class="input-wrapper">
+                <span class="material-symbols-rounded">search</span>
+                <input type="search" placeholder="ENTER A CITY" class="search-input">
+            </div>
+            <button class="search-button">
+                <span class="material-symbols-rounded">check</span>
+            </button>
+            <button class="location-button">
+                <span class="material-symbols-rounded">my_location</span>
+            </button>
+        </div>
+
+        <div class="no-results">
+            <img src="img/no_result.png" alt="" class="weather-icon">
+            <h3>Invalid request</h3>
+            <p class="message">It appears you have entered an invalid request. Make sure you entered a valid location or try again later.</p>
+        </div>
+
+        <!--Weather Section-->
+        <div class="weather-section">
+            <!--Current weather-->
+            <div class="current-weather">
+                <img src="img/none.png" alt="" class="weather-icon">
+                <h2 class="temperature">Temprature<span></span></h2>
+                <p class="description">Description</p>
+            </div>
+
+            <!--Hourly weather forecast list-->
+            <div class="hourly-weather">
+                <ul class="weather-list"></ul>
+            </div>
+        </div>
+    </div>
+    <div class="options">
+        <div class="option">
+            <button class="toggle" id="time-unit-button" onclick="changeTimeUnit()"> 
+                <span class="material-symbols-rounded">toggle_off</span> 
+            </button>
+            <h1 id="time-unit-text">24 hour time</h1> 
+        </div>
+
+        <div class="option">
+            <button class="toggle" id="temperature-measurement-button" onclick="changeTemperatureUnit()"> 
+                <span class="material-symbols-rounded">toggle_off</span> 
+            </button> 
+            <h1 id="temperature-measurement-text">Celcius Measurement</h1> 
+        </div>
+
+        <!-- Add more options as needed -->
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
