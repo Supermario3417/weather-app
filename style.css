@@ -229,8 +229,8 @@ body {
 }
 
 .options .toggle {
-    height: 40px;
-    width: 73px;
+    height: 10px;
+    width: 50px;
     outline: none;
     cursor: pointer;
     background-color: rgba(255, 255, 255, 0);
@@ -242,13 +242,13 @@ body {
 }
 
 .options .toggle span {
-    font-size: 4rem; /* Adjust the icon size */
+    font-size: 3rem; /* Adjust the icon size */
     color: rgb(126, 126, 126);
 }
 
 .options h1 {
     margin: 0; /* Remove default margin */
-    font-size: 2rem; /* Adjust text size as needed */
+    font-size: 1rem; /* Adjust text size as needed */
     color: white;
 }
 

@@ -4,12 +4,14 @@ const searchButton = document.querySelector(".search-button");
 
 const timeUnitButton = document.getElementById("time-unit-button");
 const temperatureMeasurementButton = document.getElementById("temperature-measurement-button");
+const forecastViewButton = document.getElementById("forecast-view-button");
 
 const currentWeatherDiv = document.querySelector(".current-weather");
 const hourlyWeatherDiv = document.querySelector(".hourly-weather .weather-list");
 
 var temperatureUnit = "F"
 var timeUnit = "12"
+let forecastView = "daily";
 var last_API_URL = ""
 
 const API_KEY = "21553d4853484479ab0200320250908";
@@ -69,6 +71,31 @@ displayHourlyForecast = (hourlyData) => {
     }).join("");
 }
 
+const displayDailyForecast = (forecastData) => {
+    hourlyWeatherDiv.innerHTML = forecastData.map(day => {
+        let temperature;
+        if (temperatureUnit == "C") {
+            temperature = Math.floor(day.day.avgtemp_c);
+        } else {
+            temperature = Math.floor(day.day.avgtemp_f);
+        }
+
+        const date = new Date(day.date);
+        const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+
+        const weatherIcon = Object.keys(weatherCodes).find(icon =>
+            weatherCodes[icon].includes(day.day.condition.code)
+        );
+
+        return `<li class="weather-item">
+            <p class="description">${dayName}</p>
+            <img src="img/${weatherIcon}.png" alt="" class="weather-icon">
+            <h2 class="temprature">${temperature}<span>°${temperatureUnit}</span></h2>
+        </li>`;
+    }).join("");
+}
+
+
 const getWeatherDetails = async (API_URL) => {
     window.innerWidth <= 768 && searchInput.blur();
     document.body.classList.remove("show-no-results");
@@ -90,9 +117,13 @@ const getWeatherDetails = async (API_URL) => {
         currentWeatherDiv.querySelector(".weather-icon").src = 'img/' + weatherIcon + '.png';
         currentWeatherDiv.querySelector(".temperature").innerHTML = temperature + '<span>°' + temperatureUnit + '</span>';
         currentWeatherDiv.querySelector(".description").innerText = description;
-        const combinedHourlyData = [...data.forecast.forecastday[0].hour, ...data.forecast.forecastday[1].hour];
-        
-        displayHourlyForecast(combinedHourlyData);
+        if (forecastView === "hourly") {
+            const combinedHourlyData = [...data.forecast.forecastday[0].hour, ...data.forecast.forecastday[1].hour];
+            displayHourlyForecast(combinedHourlyData);
+        } else {
+            displayDailyForecast(data.forecast.forecastday);
+        }
+
 
         searchInput.value = data.location.name;
     } catch (error) {
@@ -101,7 +132,7 @@ const getWeatherDetails = async (API_URL) => {
 }
 
 const setupWeatherRequest = (cityName) => {
-    const API_URL = 'https://api.weatherapi.com/v1/forecast.json?key='+ API_KEY + '&q=' + cityName + "&days=2";
+    const API_URL = 'https://api.weatherapi.com/v1/forecast.json?key='+ API_KEY + '&q=' + cityName + "&days=7";
     getWeatherDetails(API_URL)
 }
 
@@ -116,7 +147,7 @@ searchInput.addEventListener("keyup", (e) => {
 locationButton.addEventListener("click", () => {
     navigator.geolocation.getCurrentPosition(position => {
         const {latitude, longitude} = position.coords;
-        const API_URL = 'https://api.weatherapi.com/v1/forecast.json?key='+ API_KEY + '&q=' + latitude + ',' + longitude + "&days=2";
+        const API_URL = 'https://api.weatherapi.com/v1/forecast.json?key='+ API_KEY + '&q=' + latitude + ',' + longitude + "&days=7";
         getWeatherDetails(API_URL)
     }, error => {
         alert("Location access denied. In order to use this feature, location services must be enabled.")
@@ -160,6 +191,22 @@ function changeTemperatureUnit() {
     }
 
     if (last_API_URL != "") {
+        getWeatherDetails(last_API_URL);
+    }
+}
+
+function changeForecastView() {
+    if (forecastView === "hourly") {
+        forecastView = "daily";
+        forecastViewButton.innerHTML = '<span class="material-symbols-rounded">toggle_off</span>';
+        forecastViewButton.querySelector('span').style.color = "rgb(126, 126, 126)";
+    } else {
+        forecastView = "hourly";
+        forecastViewButton.innerHTML = '<span class="material-symbols-rounded">toggle_on</span>';
+        forecastViewButton.querySelector('span').style.color = "rgb(255, 255, 0)";
+    }
+
+    if (last_API_URL !== "") {
         getWeatherDetails(last_API_URL);
     }
 }
